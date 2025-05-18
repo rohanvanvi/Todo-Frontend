@@ -6,10 +6,13 @@ const useAuth = () => {
     queryKey: ["authUser"],
     queryFn: getCurrentUserQueryFn,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    retry: false, // Don't retry on error
-    refetchOnWindowFocus: false, // Don't refetch when window gains focus
-    refetchOnMount: false, // Don't refetch on component mount
+    retry: 1, // Retry once on error
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+    refetchOnMount: true, // Refetch on component mount
+    refetchOnReconnect: true, // Refetch when reconnecting
+    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
   });
+
   return query;
 };
 

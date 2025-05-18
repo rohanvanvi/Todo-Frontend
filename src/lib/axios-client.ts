@@ -2,18 +2,36 @@ import { CustomError } from "@/types/custom-error.type";
 import axios from "axios";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
+const isProduction = import.meta.env.MODE === 'production';
 
 const options = {
   baseURL,
   withCredentials: true,
   timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  // Ensure cookies are sent with requests
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN'
 };
 
 const API = axios.create(options);
 
-// Keep track of if we're already redirecting to avoid loops
-let isRedirecting = false;
+// Request interceptor
+API.interceptors.request.use(
+  (config) => {
+    // Ensure credentials are always sent
+    config.withCredentials = true;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
+// Response interceptor
 API.interceptors.response.use(
   (response) => {
     return response;
@@ -24,13 +42,10 @@ API.interceptors.response.use(
     // Handle 401 errors
     if (status === 401) {
       // Only redirect if we're not already doing so and not on the login page
-      if (!isRedirecting && !window.location.pathname.includes('/login')) {
-        isRedirecting = true;
+      if (!window.location.pathname.includes('/login')) {
         window.location.href = "/login";
         return Promise.reject(error);
       }
-      // If we're already on login or redirecting, just reject normally
-      return Promise.reject(error);
     }
 
     const customError: CustomError = {
