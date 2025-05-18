@@ -4,7 +4,7 @@ import useWorkspaceId from "@/hooks/use-workspace-id";
 import useAuth from "@/hooks/api/use-auth";
 import { UserType, WorkspaceType } from "@/types/api.type";
 import useGetWorkspaceQuery from "@/hooks/api/use-get-workspace";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import usePermissions from "@/hooks/use-permissions";
 import { PermissionType } from "@/constant";
 
@@ -23,13 +23,10 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const PUBLIC_ROUTES = ['/login', '/register', '/']; // Add any public routes here
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const workspaceId = useWorkspaceId();
 
   const {
@@ -51,16 +48,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const workspace = workspaceData?.workspace;
 
   useEffect(() => {
-    // Handle authentication errors
-    if (authError && !PUBLIC_ROUTES.includes(location.pathname)) {
-      navigate('/login', { replace: true });
-    }
-  }, [authError, navigate, location.pathname]);
-
-  useEffect(() => {
-    // Handle workspace errors
-    if (workspaceError?.errorCode === "ACCESS_UNAUTHORIZED") {
-      navigate("/");
+    if (workspaceError) {
+      if (workspaceError?.errorCode === "ACCESS_UNAUTHORIZED") {
+        navigate("/"); // Redirect if the user is not a member of the workspace
+      }
     }
   }, [navigate, workspaceError]);
 
@@ -69,11 +60,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const hasPermission = (permission: PermissionType): boolean => {
     return permissions.includes(permission);
   };
-
-  // Show loading state only for protected routes
-  if (isLoading && !PUBLIC_ROUTES.includes(location.pathname)) {
-    return <div>Loading...</div>; // Or your loading component
-  }
 
   return (
     <AuthContext.Provider
