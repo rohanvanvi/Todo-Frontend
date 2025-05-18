@@ -11,15 +11,26 @@ const options = {
 
 const API = axios.create(options);
 
+// Keep track of if we're already redirecting to avoid loops
+let isRedirecting = false;
+
 API.interceptors.response.use(
   (response) => {
     return response;
   },
   async (error) => {
-    const { data, status } = error.response;
+    const { data, status } = error.response || {};
 
-    if (data === "Unauthorized" && status === 401) {
-      window.location.href = "/";
+    // Handle 401 errors
+    if (status === 401) {
+      // Only redirect if we're not already doing so and not on the login page
+      if (!isRedirecting && !window.location.pathname.includes('/login')) {
+        isRedirecting = true;
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+      // If we're already on login or redirecting, just reject normally
+      return Promise.reject(error);
     }
 
     const customError: CustomError = {
