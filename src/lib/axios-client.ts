@@ -2,7 +2,6 @@ import { CustomError } from "@/types/custom-error.type";
 import axios from "axios";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
-const isProduction = import.meta.env.MODE === 'production';
 
 const options = {
   baseURL,
