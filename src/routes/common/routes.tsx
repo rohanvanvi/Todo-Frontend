@@ -8,6 +8,7 @@ import Settings from "@/page/workspace/Settings";
 import Tasks from "@/page/workspace/Tasks";
 import { AUTH_ROUTES, BASE_ROUTE, PROTECTED_ROUTES } from "./routePaths";
 import InviteUser from "@/page/invite/InviteUser";
+import WorkspaceSelection from "@/page/workspace/workspace-selection";
 
 export const authenticationRoutePaths = [
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
@@ -16,6 +17,7 @@ export const authenticationRoutePaths = [
 ];
 
 export const protectedRoutePaths = [
+  { path: PROTECTED_ROUTES.WORKSPACE_SELECTION, element: <WorkspaceSelection /> },
   { path: PROTECTED_ROUTES.WORKSPACE, element: <WorkspaceDashboard /> },
   { path: PROTECTED_ROUTES.TASKS, element: <Tasks /> },
   { path: PROTECTED_ROUTES.MEMBERS, element: <Members /> },

@@ -12,9 +12,24 @@ const AuthRoute = () => {
 
   if (isLoading && !_isAuthRoute) return <DashboardSkeleton />;
 
-  // Only redirect if we're on the root path and user is logged in
+  // Handle root path redirect
   if (user && location.pathname === '/') {
+    // If user has a current workspace, redirect to it
+    if (user.currentWorkspace) {
+      return <Navigate to={`/workspace/${user.currentWorkspace}`} replace />;
+    }
+    // Otherwise redirect to /workspace
     return <Navigate to="/workspace" replace />;
+  }
+
+  // Handle /workspace path without ID
+  if (user && location.pathname === '/workspace') {
+    // If user has a current workspace, redirect to it
+    if (user.currentWorkspace) {
+      return <Navigate to={`/workspace/${user.currentWorkspace}`} replace />;
+    }
+    // Otherwise show workspace selection UI
+    return <Outlet />;
   }
 
   return <Outlet />;
