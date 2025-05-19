@@ -26,6 +26,8 @@ const LogoutDialog = (props: {
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
+      // Remove the token from localStorage
+      localStorage.removeItem('token');
       queryClient.resetQueries({
         queryKey: ["authUser"],
       });

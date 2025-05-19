@@ -71,6 +71,8 @@ const SignIn = () => {
     mutate(values, {
       onSuccess: (data) => {
         const user = data.user;
+        // Store the token in localStorage
+        localStorage.setItem('token', data.token);
         console.log(user);
         const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
         navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
