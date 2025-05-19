@@ -43,7 +43,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isLoading: workspaceLoading,
     error: workspaceError,
     refetch: refetchWorkspace,
-  } = useGetWorkspaceQuery(workspaceId);
+  } = useGetWorkspaceQuery(workspaceId, {
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnMount: false, // Don't refetch on mount if we have data
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    enabled: !!workspaceId, // Only run query if we have a workspaceId
+  });
 
   const workspace = workspaceData?.workspace;
 

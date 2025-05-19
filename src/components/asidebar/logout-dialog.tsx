@@ -50,28 +50,25 @@ const LogoutDialog = (props: {
   }, [isPending, mutate]);
 
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure you want to log out?</DialogTitle>
-            <DialogDescription>
-              This will end your current session and you will need to log in
-              again to access your account.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button disabled={isPending} type="button" onClick={handleLogout}>
-              {isPending && <Loader className="animate-spin" />}
-              Sign out
-            </Button>
-            <Button type="button" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Sign Out</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to sign out? This will end your current session and you will need to log in again to access your account.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="destructive" disabled={isPending} onClick={handleLogout}>
+            {isPending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            Sign out
+          </Button>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
