@@ -40,9 +40,8 @@ export function WorkspaceSwitcher() {
   const { data, isPending } = useQuery({
     queryKey: ["userWorkspaces"],
     queryFn: getAllWorkspacesUserIsMemberQueryFn,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    refetchOnMount: false, // Don't refetch on mount if we have data
-    refetchOnWindowFocus: false, // Don't refetch on window focus
+    staleTime: 1,
+    refetchOnMount: true,
   });
 
   const workspaces = data?.workspaces;
