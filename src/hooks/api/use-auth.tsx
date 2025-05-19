@@ -6,7 +6,8 @@ const useAuth = () => {
     queryKey: ["authUser"],
     queryFn: getCurrentUserQueryFn,
     staleTime: 0,
-    retry: 2,
+    retry: false,
+    enabled: !!localStorage.getItem('token'),
   });
   return query;
 };

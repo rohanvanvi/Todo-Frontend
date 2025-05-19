@@ -26,12 +26,18 @@ const LogoutDialog = (props: {
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutationFn,
     onSuccess: () => {
-      // Remove the token from localStorage
+      // Clear all auth-related data
       localStorage.removeItem('token');
-      queryClient.resetQueries({
-        queryKey: ["authUser"],
-      });
-      navigate("/");
+      sessionStorage.clear(); // Clear any session storage
+      
+      // Reset all queries
+      queryClient.clear(); // Clear all queries
+      
+      // Force refetch auth to update UI
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      
+      // Navigate to login
+      navigate("/", { replace: true });
       setIsOpen(false);
     },
     onError: (error) => {

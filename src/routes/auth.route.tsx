@@ -12,9 +12,12 @@ const AuthRoute = () => {
 
   if (isLoading && !_isAuthRoute) return <DashboardSkeleton />;
 
-  if (!user) return <Outlet />;
+  // Only redirect if we're on the root path and user is logged in
+  if (user && location.pathname === '/') {
+    return <Navigate to="/workspace" replace />;
+  }
 
-  return <Navigate to={`workspace/${user.currentWorkspace?._id}`} replace />;
+  return <Outlet />;
 };
 
 export default AuthRoute;
